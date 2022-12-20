@@ -20,16 +20,18 @@ router.post("/signup", async (req, res) => {
   let { name, email, password } = req.body;
   //check database
   const emailExist = await User.findOne({ email });
-  if (emailExist) return res.status(400).send("Email already exist.");
+  if (emailExist) {
+    req.flash("error_msg", "email registered");
+    res.redirect("/auth/signup");
+  }
+
   const hash = await bcrypt.hash(password, 10);
   password = hash;
   let newUser = new User({ name, email, password });
   try {
-    const saveUser = await newUser.save();
-    res.status(200).send({
-      msg: "User saves.",
-      savedObj: saveUser,
-    });
+    await newUser.save();
+    req.flash("success_msg", "registered, you can login");
+    res.redirect("/auth/login");
   } catch (err) {
     res.status(400).send(err);
   }

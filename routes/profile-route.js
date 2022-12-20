@@ -15,7 +15,7 @@ router.get("/", authCheck, async (req, res) => {
   let postFound = await Post.find({
     author: req.user._id,
   });
-
+  console.log("postFound", postFound);
   res.render("profile", { user: req.user, posts: postFound });
 });
 
@@ -25,7 +25,7 @@ router.get("/post", authCheck, (req, res) => {
 
 router.post("/post", authCheck, async (req, res) => {
   let { title, content } = req.body;
-  console.log("tittle", req.body);
+  console.log("title", req.body);
   let newPost = new Post({ title, content, author: req.user._id });
   try {
     await newPost.save();

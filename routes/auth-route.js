@@ -16,6 +16,17 @@ router.get("/logout", (req, res) => {
   res.redirect("/");
 });
 
+router.post(
+  "/login",
+  passport.authenticate("local", {
+    failureRedirect: "/auth/login",
+    failureFlash: "Wrong email or passwprd",
+  }),
+  (req, res) => {
+    res.redirect("/profile");
+  }
+);
+
 router.post("/signup", async (req, res) => {
   let { name, email, password } = req.body;
   //check database
@@ -33,14 +44,16 @@ router.post("/signup", async (req, res) => {
     req.flash("success_msg", "registered, you can login");
     res.redirect("/auth/login");
   } catch (err) {
-    res.status(400).send(err);
+    console.log("err", err.errors.name.properties.message);
+    req.flash("error_msg", err.errors.name.properties.message);
+    res.redirect("/auth/signup");
   }
 });
 
 router.get(
   "/google",
   passport.authenticate("google", {
-    scope: ["profile"],
+    scope: ["profile", "email"],
   })
 );
 

@@ -1,13 +1,12 @@
-const { Schema, model, default: mongoose } = require("mongoose");
+const mongoose = require("mongoose");
 
-const userSchema = new Schema({
+const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
     minLength: 6,
     maxLength: 255,
   },
-
   googleID: {
     type: String,
   },
@@ -15,18 +14,17 @@ const userSchema = new Schema({
     type: Date,
     default: Date.now,
   },
-
   thumbnail: {
     type: String,
   },
-  //local login
-
+  // local login
   email: {
     type: String,
   },
-
   password: {
     type: String,
+    minLength: 8,
+    maxLength: 1024,
   },
 });
 
